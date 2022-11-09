@@ -1,0 +1,197 @@
+ //size_t size = 0;
+        //cudaGraphicsResourceGetMappedPointer((void**)&g_pbo, &size, resource);
+        //calc << <615, 500 >> > (g_pbo);
+        //cudaGraphicsUnmapResources(1, &resource, 0);
+         // Here: RGBA32F
+       // glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+        //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, (GLsizei)MAP_WIDTH, (GLsizei)MAP_HEIGHT, 0, GL_RGBA, GL_FLOAT, nullptr);
+        //glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+        //std::cout << result[7];
+        // Select the appropriate buffer
+        //glBindBuffer(GL_PIXEL_UNPACK_BUFFER, bufferID);
+        // Select the appropriate texture
+        //glBindTexture(GL_TEXTURE_2D, textureID);
+        // Make a texture from the buffer
+       // glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, MAP_WIDTH, MAP_HEIGHT,GL_BGRA, GL_UNSIGNED_BYTE, NULL);
+
+       //float* mapdata = getMapData();
+Old way of drawing light map using output array
+/*
+        for (int x = 0; x < MAP_WIDTH; x++) {
+            for (int y = 0; y < MAP_HEIGHT; y++) {
+                glColor4f(0.0, 0.0, 0.0, mapdata[y * MAP_WIDTH + x]);
+                //glColor4f(0.0, 0.0, 0.0,1.0);
+                glVertex2i(x, y);
+            }
+        }
+        */
+Old pbo approach
+
+//GLuint pbo;
+//float* g_pbo;
+//float* result;
+//cudaGraphicsResource* resource;
+//result = (float*)malloc(MAP_WIDTH * MAP_HEIGHT * sizeof(float));
+    //glGenBuffers(1, &pbo);
+    //glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+    //glBufferData(GL_PIXEL_UNPACK_BUFFER, MAP_WIDTH * MAP_HEIGHT * sizeof(float) * 4, nullptr, GL_STREAM_READ);
+    //glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    //cudaGraphicsGLRegisterBuffer(&resource, pbo, cudaGraphicsMapFlagsNone);
+
+//addNums<<<numBlocks,blockSize>>>(N,x,y)
+//global thread id = blockId.x * blockDim.x + threadIdx.x
+//number of blocks = (N + NUM_THREADS - 1) / NUM_THREADS
+//cudaStatus = cudaMalloc((void**)&dev_b, size * sizeof(int));
+//cudaStatus = cudaMemcpy(c, dev_c, size * sizeof(int), cudaMemcpyDeviceToHost);
+// Launch a kernel on the GPU with one thread for each element.
+
+//glMatrixMode(GL_MODELVIEW);
+        //glBegin(GL_POINTS);
+        //for (int x = 0; x < MAP_WIDTH; x++) {
+        //    for (int y = 0; y < MAP_HEIGHT; y++) {
+        //        glColor3f(0.0, 0.7, 0.7);
+        //        glVertex2i(x, y);
+        //    }
+        //}
+
+
+float* getMapData() {
+    std::chrono::time_point<std::chrono::system_clock> start, kernelstart, end, kernelend;
+    std::chrono::time_point<std::chrono::system_clock> memoryTransferStart, memoryTransferEnd;
+    std::chrono::time_point<std::chrono::system_clock> transferOffStart, transferOffEnd;
+    std::chrono::time_point<std::chrono::system_clock> initialSetupStart, initialSetupEnd;
+
+    initialSetupStart = std::chrono::system_clock::now();
+    int size = MAP_WIDTH * MAP_HEIGHT * sizeof(float);
+    float* mapdata = (float*)malloc(size);
+    float* gcoutput;
+
+    int cpuLightCount = 2;
+    int* gpuLightCount;
+    light *cpuLight = (light*)malloc(sizeof(light) * cpuLightCount);
+    light* gpuLight;
+    
+    int cpuObstacleCount = 1;
+    int* gpuObstacleCount;
+    obstacle* cpuObstacleList = (obstacle*)malloc(sizeof(obstacle) * cpuObstacleCount);
+    obstacle* gpuObstacleList;
+
+    cpuLight[0].lightx = 100.0;
+    cpuLight[0].lighty = 100.0;
+    cpuLight[0].radius = 300.0;
+    cpuLight[0].startingIntensity = 0.9;
+    cpuLight[1].lightx = 300.0;
+    cpuLight[1].lighty = 300.0;
+    cpuLight[1].radius = 300.0;
+    cpuLight[1].startingIntensity = 0.9;
+
+    cpuObstacleList[0].x = 150.0;
+    cpuObstacleList[0].y = 150.0;
+    cpuObstacleList[0].width = 50.0;
+    cpuObstacleList[0].height = 50.0;
+
+    for (int lightIndex = 0; lightIndex < 2; lightIndex++) {
+        for (int randomIndex = 0;randomIndex < LIGHT_SAMPLE_POINTS;randomIndex++) {
+            float rotation = ((float) randomIndex / (float) LIGHT_SAMPLE_POINTS) * 2.0 * 3.14;
+            //cpuLight[lightIndex].testxpoints[randomIndex] = cpuLight[lightIndex].lightx + 15.0 * cos(rotation);
+            //cpuLight[lightIndex].testypoints[randomIndex] = cpuLight[lightIndex].lightx + 15.0 * sin(rotation);
+        }
+    }
+
+
+    
+    start = std::chrono::system_clock::now();
+
+    for (int x = 0; x < MAP_WIDTH; x++) {
+        for (int y = 0; y < MAP_HEIGHT; y++) {
+            mapdata[y * MAP_WIDTH + x] = 0.9;
+        }
+    }
+    initialSetupEnd = std::chrono::system_clock::now();
+    std::chrono::duration<double> initialSetupSeconds = initialSetupEnd - initialSetupStart;
+    std::cout << "Initial Setup: " << initialSetupSeconds.count() << "s\n";
+
+    memoryTransferStart = std::chrono::system_clock::now();
+
+
+    std::chrono::time_point<std::chrono::system_clock> allocationStart, allocationEnd, copyStart, copyEnd;
+    std::chrono::duration<double>  allocationTime, copyTime;
+    allocationStart = std::chrono::system_clock::now();
+    errorCheck(cudaMallocHost((void**)&gcoutput,size));
+    allocationEnd = std::chrono::system_clock::now();
+    copyStart = std::chrono::system_clock::now();
+    memcpy(gcoutput, mapdata, size);
+    copyEnd = std::chrono::system_clock::now();
+    allocationTime = allocationEnd - allocationStart;
+    copyTime = copyEnd - copyStart;
+    std::cout << "Allocation time: " << allocationTime.count() << "s\n";
+    std::cout << "Copy time: " << copyTime.count() << "s\n";
+
+    errorCheck(cudaMalloc((float**)&gcoutput, size));
+    errorCheck(cudaMemcpy(gcoutput, mapdata, size, cudaMemcpyHostToDevice));
+    
+    errorCheck(cudaMalloc((light**)&gpuLight, sizeof(light) * 2));
+    errorCheck(cudaMemcpy(gpuLight, cpuLight, sizeof( light) * 2, cudaMemcpyHostToDevice));
+
+    errorCheck(cudaMalloc((void**)&gpuLightCount, sizeof(int)));
+    errorCheck(cudaMemcpy(gpuLightCount, &cpuLightCount, sizeof(int), cudaMemcpyHostToDevice));
+
+    errorCheck(cudaMalloc((void**)&gpuObstacleCount, sizeof(int)));
+    errorCheck(cudaMemcpy(gpuObstacleCount, &cpuObstacleCount, sizeof(int), cudaMemcpyHostToDevice));
+
+    errorCheck(cudaMalloc((obstacle**)&gpuObstacleList, sizeof(obstacle) * 1));
+    errorCheck(cudaMemcpy(gpuObstacleList, cpuObstacleList, sizeof(obstacle) * 1, cudaMemcpyHostToDevice));
+
+    memoryTransferEnd = std::chrono::system_clock::now();
+    std::chrono::duration<double> memoryTransferSeconds = memoryTransferEnd - memoryTransferStart;
+    std::cout << "Memory transfer: " << memoryTransferSeconds.count() << "s\n";
+    //return 0;
+
+    errorCheck(cudaFreeHost(gcoutput));
+    //endProgram();
+
+    dim3 test(MAP_WIDTH, MAP_HEIGHT);
+
+    //printf("Get map data.");
+    //calculations <<<300,1024>>>(gcoutput,gpuLight,gpuObstacleList);
+
+    kernelstart = std::chrono::system_clock::now();
+
+    //calculations <<<615,500>>>(gcoutput,gpuLight,gpuObstacleList);
+    kernelend = std::chrono::system_clock::now();
+    std::chrono::duration<double> kernel_seconds = kernelend - kernelstart;
+    std::cout << "Kernel time: " << kernel_seconds.count() << "s\n";
+    std::cout << "Kernel fps: " << ((int)(1 / kernel_seconds.count())) << "fps\n";
+
+
+    int cudaRuntimeError = cudaGetLastError();
+
+    if (!(cudaRuntimeError == 0)) {
+        std::cout << cudaRuntimeError << std::endl;
+    }
+
+    transferOffStart = std::chrono::system_clock::now();
+    cudaMemcpy(mapdata, gcoutput, size, cudaMemcpyDeviceToHost);
+    transferOffEnd = std::chrono::system_clock::now();
+    std::chrono::duration<double> transferOffSeconds = transferOffEnd - transferOffStart;
+    std::cout << "Copy memory off: " << transferOffSeconds.count() << "s\n";
+
+    errorCheck(cudaFreeHost(gcoutput));
+    errorCheck(cudaFree(gpuObstacleList));
+    errorCheck(cudaFree(gpuLight));
+
+    end = std::chrono::system_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end - start;
+    //std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+
+    std::cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
+
+    for (int y = 20; y < 40; y++) {
+        for (int x = 20; x < 40; x++) {
+            std::cout << mapdata[x + (y * MAP_WIDTH)] << ",";
+        }
+        std::cout << "\n";
+    }
+
+    return mapdata;
+}

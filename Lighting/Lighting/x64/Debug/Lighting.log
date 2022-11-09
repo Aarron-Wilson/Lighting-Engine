@@ -1,0 +1,84 @@
+﻿  Compiling CUDA source file kernel.cu...
+  
+  C:\Users\aawil\source\repos\Lighting\Lighting>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\bin\nvcc.exe" -gencode=arch=compute_52,code=\"sm_52,compute_52\" --use-local-env -ccbin "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64" -x cu   -I"C:\Users\aawil\OneDrive\Documents\Libraries\glfw-3.3.7.bin.WIN64\include" -I"C:\Users\aawil\source\repos\Lighting Test Project\External\GLEW\include" -I"C:\Users\aawil\OneDrive\Documents\Libraries\glfw-3.3.7.bin.WIN64\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include"  -G   --keep-dir x64\Debug  -maxrregcount=0  --machine 64 --compile -cudart static  -g  -DWIN32 -DWIN64 -D_DEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /Fdx64\Debug\vc143.pdb /FS /Zi /RTC1 /MDd " -o C:\Users\aawil\source\repos\Lighting\Lighting\x64\Debug\kernel.cu.obj "C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu" 
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(34): warning #375-D: declaration requires a typedef name
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(21): warning #1866-D: attribute does not apply to any entity
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(43): warning #375-D: declaration requires a typedef name
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(36): warning #1866-D: attribute does not apply to any entity
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(389): warning #177-D: variable "lightX" was declared but never referenced
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(390): warning #177-D: variable "lightY" was declared but never referenced
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(391): warning #177-D: variable "radius" was declared but never referenced
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(383): warning #550-D: variable "startingIntensity" was set but never used
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(413): warning #177-D: variable "x" was declared but never referenced
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(575): warning #177-D: variable "lightX" was declared but never referenced
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(576): warning #177-D: variable "lightY" was declared but never referenced
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(577): warning #177-D: variable "radius" was declared but never referenced
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(558): warning #550-D: variable "startingIntensity" was set but never used
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(856): warning #177-D: variable "rotationIncrement" was declared but never referenced
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(945): warning #177-D: variable "window_width" was declared but never referenced
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(945): warning #177-D: variable "window_height" was declared but never referenced
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(967): warning #550-D: variable "copyTime" was set but never used
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(1001): warning #550-D: variable "kernelTime" was set but never used
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(16): warning #177-D: variable "LIGHT_SAMPLE_POINTS" was declared but never referenced
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(17): warning #177-D: variable "LIGHT_SAMPLE_POINT_RADIUS" was declared but never referenced
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(34): warning #375-D: declaration requires a typedef name
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(21): warning #1866-D: attribute does not apply to any entity
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(43): warning #375-D: declaration requires a typedef name
+  
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(36): warning #1866-D: attribute does not apply to any entity
+  
+  kernel.cu
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(683): warning C4244: 'argument': conversion from 'float' to 'GLint', possible loss of data
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(683): warning C4244: 'argument': conversion from 'float' to 'GLint', possible loss of data
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(725): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(730): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(798): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(811): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(811): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(811): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(811): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(837): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(842): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(845): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(856): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(869): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(871): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(874): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(876): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(879): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(880): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(881): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(882): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(884): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(885): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(1023): warning C4996: 'cudaMemcpyToArray': was declared deprecated
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(945): warning C4101: 'window_width': unreferenced local variable
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(945): warning C4101: 'window_height': unreferenced local variable
+C:\Users\aawil\source\repos\Lighting\Lighting\kernel.cu(1056): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'C:\Users\aawil\source\repos\Lighting\x64\Debug\vc120.pdb'; linking object as if no debug info
+     Creating library C:\Users\aawil\source\repos\Lighting\x64\Debug\Lighting.lib and object C:\Users\aawil\source\repos\Lighting\x64\Debug\Lighting.exp
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  Lighting.vcxproj -> C:\Users\aawil\source\repos\Lighting\x64\Debug\Lighting.exe
